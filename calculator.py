@@ -1,30 +1,41 @@
+"""
+Script to run the Calculator App
+"""
 import operator
-
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
-
-from MainWindow import Ui_MainWindow
+from MainWindow import CalculatorUI
 
 # Calculator state.
 READY = 0
 INPUT = 1
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+
+class CalculatorApp(QMainWindow, CalculatorUI):
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
-        self.setupUi(self)
+        super(CalculatorApp, self).__init__(*args, **kwargs)
+        self.setupCalculatorUi(self)
 
         # Setup numbers.
         for n in range(0, 10):
-            getattr(self, 'pushButton_n%s' % n).pressed.connect(lambda v=n: self.input_number(v))
+            getattr(self, 'pushButton_n%s' % n).pressed.connect(
+                    lambda v=n: self.input_number(v)
+                )
 
         # Setup operations.
-        self.pushButton_add.pressed.connect(lambda: self.operation(operator.add))
-        self.pushButton_sub.pressed.connect(lambda: self.operation(operator.sub))
-        self.pushButton_mul.pressed.connect(lambda: self.operation(operator.mul))
-        self.pushButton_div.pressed.connect(lambda: self.operation(operator.truediv))  # operator.div for Python2.7
+        self.pushButton_add.pressed.connect(
+            lambda: self.operation(operator.add)
+        )
+        self.pushButton_sub.pressed.connect(
+            lambda: self.operation(operator.sub)
+        )
+        self.pushButton_mul.pressed.connect(
+            lambda: self.operation(operator.mul)
+        )
+        self.pushButton_div.pressed.connect(
+            lambda: self.operation(operator.truediv)
+        )  # operator.div for Python2.7
 
         self.pushButton_pc.pressed.connect(self.operation_pc)
         self.pushButton_eq.pressed.connect(self.equals)
@@ -82,7 +93,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.state = INPUT
         self.stack[-1] *= 0.01
         self.display()
-
+        
     def equals(self):
         # Support to allow '=' to repeat previous operation
         # if no further input has been added.
@@ -106,8 +117,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 if __name__ == '__main__':
     app = QApplication([])
-    app.setApplicationName("Calculon")
-
-    window = MainWindow()
+    app.setApplicationName("Calculator")
+    window = CalculatorApp()
     app.exec_()
     
